@@ -1,11 +1,16 @@
 
 # python-findup
 
+
 ## Introduction
 
 Find the first file matching a given pattern in the current directory or the
 nearest ancestor directory.  This project is (roughly) a python version of
 [node-findup-sync](https://github.com/cowboy/node-findup-sync).
+
+Why?  Applications, such as git, often use project configuration files found in
+the current directory or an ancestor directory.  The `findup` modules allows an
+application author to easily find these files or directories.
 
 
 ## Installation
