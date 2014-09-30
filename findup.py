@@ -16,13 +16,13 @@ def glob(pattern, cwd=None):
     :param cwd: Defaults to the current working directory.  Use this to start
     searching from a different directory.
     '''
-    if cwd and not os.path.isdir(cwd):
+    if cwd and not os.path.isdir(normalize_path(cwd)):
         raise Exception('cwd must be a directory path', cwd)
 
     if cwd is None:
         cwd = os.getcwd()
 
-    for d in walk_up(cwd):
+    for d in walk_up(normalize_path(cwd)):
         matches = globmodule.glob(os.path.join(d, pattern))
         if matches:
             return d
@@ -33,22 +33,25 @@ def glob(pattern, cwd=None):
 #####################
 # AUXILIARY FUNCTIONS
 
+
+def normalize_path(path, realpath=False):
+    if realpath:
+        return os.path.realpath(os.path.expanduser(path))
+    else:
+        return os.path.abspath(os.path.expanduser(path))
+
+
 def walk_up(path, realpath=False):
     '''
-    First normalize path using os.path.expanduser, then os.path.abspath
-    (default) or os.path.realpath (if realpath is True).  Then yield path and
-    every directory above path.
+    Yield path and every directory above path.
+    Consider normalizing path, using `normalize_path(path)` first.
 
     Example:
 
-        list(walk_up('~/tmp/./')) -> 
+        list(walk_up('/Users/td23/tmp')) -> 
         ['/Users/td23/tmp', '/Users/td23', '/Users', '/']
     '''
-    if realpath:
-        curr_path = os.path.realpath(os.path.expanduser(path))
-    else:
-        curr_path = os.path.abspath(os.path.expanduser(path))
-
+    curr_path = path
     while 1:
         yield curr_path
         curr_path, tail = os.path.split(curr_path)
