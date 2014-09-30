@@ -34,4 +34,9 @@ characters, like `?` and `*`.  See the python `glob` module for more details.
 
     findup.glob(pattern)
 
+To find the root of a git repository, when the current working directory is
+somewhere within the repository:
+
+    >>> import findup
+    >>> print findup.glob('.git')
 
